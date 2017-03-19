@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Draw Like Picaso Project</title>
+    <style media="screen">
+        body {
+            position: relative;
+        }
+
+        canvas {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="mycanvas" width="800" height="700"></canvas>
+
+    <script>
+        const canvas = document.getElementById("mycanvas");
+        const ctx = canvas.getContext("2d");
+        var movingx, movingy, hue = 0;
+        var flag = false; //for ensuring the click and drag
+        var size = "inc"; //helps with inc or dec lineWidth
+
+        canvas.height = window.innerHeight; //sets the canvas to full dimensions
+        canvas.width = window.innerWidth;
+        ctx.font = "30px Arial";
+        ctx.fillText("Click and Drag Slowly", 550, 400); //starting text
+        ctx.lineWidth = 10;
+        ctx.lineJoin = 'round'; //for getting the continous lines
+        ctx.lineCap = 'round'; //for getting the circles at every point
+
+
+        canvas.addEventListener("mouseup", e => flag = false);
+        canvas.addEventListener("mousedown", (e) => {
+            flag = true;
+        });
+        canvas.addEventListener("mousemove", startsketching);
+
+        function startsketching(e) {
+            if (!flag) {
+                return;
+            }
+            movingx = e.pageX;
+            movingy = e.pageY;
+            ctx.beginPath();
+            ctx.strokeStyle = `hsl(${hue},70%,50%)`;
+            ctx.moveTo(movingx, movingy); //changing starting point to be where the cursor is
+            ctx.lineTo(movingx, movingy); //changing ending point to be same as the last point aka starting point...creates a trailing line
+            ctx.stroke();
+            hue++;
+
+            //This checks the lineWidth value to inc or dec:
+
+            //This checks when the value is at the minimum and needs to inc
+            if (ctx.lineWidth === 0 || ctx.lineWidth === 1) {
+                size = "inc";
+                ctx.lineWidth += 1;
+            }
+
+            //This checks when the lineWidth is at the Maximum and needs to do down
+            else if (ctx.lineWidth === 125) {
+                size = "dec";
+                ctx.lineWidth -= 1;
+            }
+
+            // This checks when lineWidth is increasing
+            else if (ctx.lineWidth > 0 && ctx.lineWidth < 125 && size === "inc") {
+                ctx.lineWidth += 1;
+            }
+
+            //This checks when the lineWidth is decreasing
+            else if (ctx.lineWidth > 0 && ctx.lineWidth < 125 && size === "dec") {
+                ctx.lineWidth -= 1;
+            }
+        }
+    </script>
+
+</body>
+
+</html>
+
+</html>
